@@ -1,0 +1,11 @@
+WITH CTE AS(
+SELECT co.ORDER_ID 
+,MAX(DATEDIFF('minute',ORDER_TIME,pickup_time::timestamp_ntz)) AS DIFFERENCE
+FROM customer_orders AS co
+INNER JOIN runner_orders AS ro
+ON co.order_id = ro.order_id
+WHERE pickup_time != 'null'
+GROUP BY co.order_id
+)
+SELECT MAX(DIFFERENCE) - MIN(DIFFERENCE) AS MINS_DIFF
+FROM CTE
